@@ -11,6 +11,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
 from .const import DOMAIN, CONF_UPDATE_INTERVAL
 from .services import async_setup_services, async_unload_services
+from .download import async_setup_download_handler
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -38,6 +39,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     
     # Register services
     await async_setup_services(hass)
+    
+    # Register download handler
+    await async_setup_download_handler(hass)
     
     # Register update listener
     entry.async_on_unload(entry.add_update_listener(update_listener))
@@ -80,10 +84,6 @@ class ListingDataUpdateCoordinator(DataUpdateCoordinator):
 
     async def _async_update_data(self):
         """Update data via library."""
-        return await self.hass.async_add_executor_job(self._get_all_data)
-
-    def _get_all_data(self):
-        """Get all Home Assistant data."""
         data = {
             "devices": [],
             "entities": {},
@@ -95,8 +95,10 @@ class ListingDataUpdateCoordinator(DataUpdateCoordinator):
         }
         
         # Get all entities
-        entities_registry = self.hass.helpers.entity_registry.async_get(self.hass)
-        devices_registry = self.hass.helpers.device_registry.async_get(self.hass)
+        from homeassistant.helpers import entity_registry, device_registry
+        
+        entities_registry = entity_registry.async_get(self.hass)
+        devices_registry = device_registry.async_get(self.hass)
         
         # Get devices
         for device in devices_registry.devices.values():
@@ -125,8 +127,9 @@ class ListingDataUpdateCoordinator(DataUpdateCoordinator):
                 "attributes": dict(state.attributes) if state else {},
             })
         
-        # Get automations
-        for entity_id, state in self.hass.states.async_all():
+        # Get automations, scripts, scenes, and inputs
+        for state in self.hass.states.async_all():
+            entity_id = state.entity_id
             if entity_id.startswith("automation."):
                 data["automations"].append({
                     "entity_id": entity_id,

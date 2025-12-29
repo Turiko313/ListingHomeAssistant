@@ -74,26 +74,36 @@ Actualise manuellement les données de listing.
 service: listing_homeassistant.refresh
 ```
 
-#### listing_homeassistant.export_yaml
+### Export YAML
 
-Exporte toutes les données dans un fichier YAML structuré.
+Pour exporter les données en YAML, utilisez la carte personnalisée ou accédez directement à l'URL de téléchargement :
 
-```yaml
-service: listing_homeassistant.export_yaml
+```
+http://your-home-assistant:8123/api/listing_homeassistant/download
 ```
 
-Après l'appel du service, un événement `listing_homeassistant_yaml_export_ready` est déclenché avec les informations du fichier exporté.
+Le fichier sera téléchargé automatiquement avec un nom incluant la date et l'heure.
+
+### Carte personnalisée
+
+Une carte Lovelace personnalisée est disponible pour une meilleure visualisation. Voir [CARD_DOCUMENTATION.md](CARD_DOCUMENTATION.md) pour plus de détails.
+
+Pour ajouter la carte :
+
+```yaml
+type: custom:listing-homeassistant-card
+```
 
 ### Exemple d'automatisation
 
 ```yaml
 automation:
-  - alias: "Export quotidien de la liste"
+  - alias: "Actualisation quotidienne"
     trigger:
       - platform: time
         at: "00:00:00"
     action:
-      - service: listing_homeassistant.export_yaml
+      - service: listing_homeassistant.refresh
 ```
 
 ### Accès aux données

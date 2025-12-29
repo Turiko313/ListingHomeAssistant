@@ -152,26 +152,45 @@ class ListingHomeAssistantCard extends HTMLElement {
 
     if (exportButton) {
       exportButton.onclick = async () => {
-        // Call the export service
-        await hass.callService(domain, 'export_yaml', {});
+        // Download directly from the endpoint
+        const downloadUrl = '/api/listing_homeassistant/download';
         
-        // Listen for the export ready event
-        const removeListener = hass.connection.subscribeEvents((event) => {
-          if (event.event_type === `${domain}_yaml_export_ready`) {
-            // Get the YAML content from hass.data
-            // Since we can't directly access hass.data from the frontend,
-            // we'll use a websocket call to get the content
-            hass.callWS({
-              type: 'call_service',
-              domain: domain,
-              service: 'get_yaml_export',
-            }).then((response) => {
-              // For now, show a message that the export is ready
-              alert('Export YAML prêt ! Consultez les logs ou utilisez un service pour télécharger le fichier.');
-            });
-            removeListener();
+        try {
+          const response = await fetch(downloadUrl, {
+            headers: {
+              'Authorization': `Bearer ${hass.auth.data.access_token}`
+            }
+          });
+          
+          if (response.ok) {
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            
+            // Get filename from Content-Disposition header
+            const contentDisposition = response.headers.get('Content-Disposition');
+            let filename = 'listing_homeassistant.yaml';
+            if (contentDisposition) {
+              const matches = /filename="(.+)"/.exec(contentDisposition);
+              if (matches && matches[1]) {
+                filename = matches[1];
+              }
+            }
+            
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+          } else {
+            alert('Erreur lors de l\'export YAML');
           }
-        }, `${domain}_yaml_export_ready`);
+        } catch (error) {
+          console.error('Error downloading YAML:', error);
+          alert('Erreur lors du téléchargement du fichier YAML');
+        }
       };
     }
   }

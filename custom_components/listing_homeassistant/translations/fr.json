@@ -25,10 +25,6 @@
     "refresh": {
       "name": "Actualiser",
       "description": "Actualiser manuellement les données de listing"
-    },
-    "export_yaml": {
-      "name": "Exporter en YAML",
-      "description": "Exporter toutes les données de listing dans un fichier YAML"
     }
   }
 }

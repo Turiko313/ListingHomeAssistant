@@ -7,6 +7,6 @@
   "config_flow": true,
   "codeowners": ["@Turiko313"],
   "dependencies": [],
-  "requirements": [],
+  "requirements": ["PyYAML==6.0.1"],
   "iot_class": "local_polling"
 }

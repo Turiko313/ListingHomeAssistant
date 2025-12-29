@@ -1,0 +1,64 @@
+# Listing Home Assistant Card
+
+Une carte Lovelace personnalisée pour visualiser et exporter les données de Listing Home Assistant.
+
+## Installation de la carte
+
+1. Copiez le fichier `listing-homeassistant-card.js` dans votre dossier `www` de Home Assistant
+2. Ajoutez la ressource dans votre configuration Lovelace
+
+### Via l'interface utilisateur
+
+1. Allez dans **Paramètres** > **Tableaux de bord** > **Ressources**
+2. Cliquez sur **+ Ajouter une ressource**
+3. URL : `/listing_homeassistant/listing-homeassistant-card.js`
+4. Type de ressource : **Module JavaScript**
+
+### Configuration manuelle
+
+Ajoutez dans votre `configuration.yaml` :
+
+```yaml
+lovelace:
+  resources:
+    - url: /listing_homeassistant/listing-homeassistant-card.js
+      type: module
+```
+
+## Utilisation
+
+Ajoutez la carte à votre tableau de bord :
+
+```yaml
+type: custom:listing-homeassistant-card
+```
+
+## Fonctionnalités
+
+- 📊 **Statistiques en temps réel** : Affiche le nombre d'appareils, entités, automatisations, scripts, scènes et inputs
+- 🔄 **Bouton Actualiser** : Rafraîchit manuellement les données
+- 📥 **Bouton Exporter** : Télécharge un fichier YAML avec toutes les données
+- 🎨 **Design moderne** : Interface utilisateur élégante avec icônes Material Design
+
+## Capture d'écran
+
+La carte affiche :
+- Des cartes statistiques pour chaque type de données
+- Des boutons d'action pour actualiser et exporter
+- L'heure de la dernière mise à jour
+
+## Alternative : Utiliser les sensors directement
+
+Vous pouvez aussi créer vos propres cartes en utilisant les sensors créés par l'intégration :
+
+```yaml
+type: entities
+entities:
+  - entity: sensor.listing_home_assistant_devices
+  - entity: sensor.listing_home_assistant_entities
+  - entity: sensor.listing_home_assistant_automations
+  - entity: sensor.listing_home_assistant_scripts
+  - entity: sensor.listing_home_assistant_scenes
+  - entity: sensor.listing_home_assistant_inputs
+  - entity: sensor.listing_home_assistant_summary
+```
