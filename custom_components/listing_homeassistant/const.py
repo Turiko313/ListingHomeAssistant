@@ -11,3 +11,6 @@ UPDATE_INTERVALS = {
     "12_hours": 43200,
     "1_day": 86400,
 }
+
+# Special key for YAML export data storage
+YAML_EXPORT_KEY = "yaml_export"

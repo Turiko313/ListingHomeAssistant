@@ -71,6 +71,10 @@ class ListingBaseSensor(CoordinatorEntity, SensorEntity):
             "model": "Home Assistant Listing",
             "sw_version": "1.0.0",
         }
+    
+    def _get_last_update(self) -> str:
+        """Return the last update timestamp."""
+        return datetime.now().isoformat()
 
 
 class ListingDevicesSensor(ListingBaseSensor):
@@ -98,7 +102,7 @@ class ListingDevicesSensor(ListingBaseSensor):
         return {
             "devices": devices,
             "count": len(devices),
-            "last_update": datetime.now().isoformat(),
+            "last_update": self._get_last_update(),
         }
 
 
@@ -131,7 +135,7 @@ class ListingEntitiesSensor(ListingBaseSensor):
             "entities_by_domain": entities,
             "domain_counts": counts,
             "total_count": sum(counts.values()),
-            "last_update": datetime.now().isoformat(),
+            "last_update": self._get_last_update(),
         }
 
 
@@ -160,7 +164,7 @@ class ListingAutomationsSensor(ListingBaseSensor):
         return {
             "automations": automations,
             "count": len(automations),
-            "last_update": datetime.now().isoformat(),
+            "last_update": self._get_last_update(),
         }
 
 
@@ -189,7 +193,7 @@ class ListingScriptsSensor(ListingBaseSensor):
         return {
             "scripts": scripts,
             "count": len(scripts),
-            "last_update": datetime.now().isoformat(),
+            "last_update": self._get_last_update(),
         }
 
 
@@ -218,7 +222,7 @@ class ListingScenesSensor(ListingBaseSensor):
         return {
             "scenes": scenes,
             "count": len(scenes),
-            "last_update": datetime.now().isoformat(),
+            "last_update": self._get_last_update(),
         }
 
 
@@ -251,7 +255,7 @@ class ListingInputsSensor(ListingBaseSensor):
             "inputs_by_type": inputs,
             "type_counts": counts,
             "total_count": sum(counts.values()),
-            "last_update": datetime.now().isoformat(),
+            "last_update": self._get_last_update(),
         }
 
 
@@ -287,5 +291,5 @@ class ListingSummarySensor(ListingBaseSensor):
             "total_inputs": sum(len(v) for v in inputs.values()),
             "entity_domains": list(entities.keys()),
             "input_types": list(inputs.keys()),
-            "last_update": datetime.now().isoformat(),
+            "last_update": self._get_last_update(),
         }

@@ -22,9 +22,9 @@ async def async_setup_services(hass: HomeAssistant) -> None:
         """Handle the refresh service call."""
         _LOGGER.info("Refreshing Listing Home Assistant data")
         
-        # Refresh all coordinators
+        # Refresh all coordinators (filter to only coordinators with async_refresh method)
         for entry_id, coordinator in hass.data[DOMAIN].items():
-            if hasattr(coordinator, 'async_refresh'):
+            if hasattr(coordinator, 'async_refresh') and callable(coordinator.async_refresh):
                 await coordinator.async_refresh()
 
     hass.services.async_register(

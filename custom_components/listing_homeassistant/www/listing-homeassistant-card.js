@@ -64,7 +64,7 @@ class ListingHomeAssistantCard extends HTMLElement {
           min-width: 150px;
           padding: 12px 24px;
           background: var(--primary-color);
-          color: var(--text-primary-color);
+          color: var(--primary-text-color);
           border: none;
           border-radius: 4px;
           cursor: pointer;

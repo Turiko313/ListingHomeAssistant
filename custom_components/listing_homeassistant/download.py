@@ -10,7 +10,7 @@ import yaml
 from homeassistant.components.http import HomeAssistantView
 from homeassistant.core import HomeAssistant
 
-from .const import DOMAIN
+from .const import DOMAIN, YAML_EXPORT_KEY
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -33,9 +33,10 @@ class ListingDownloadView(HomeAssistantView):
             return web.Response(text="No data available", status=404)
         
         # Get the first coordinator (should only be one entry)
+        # Skip the YAML_EXPORT_KEY which is used for storing export data
         coordinator = None
         for entry_id, coord in self.hass.data[DOMAIN].items():
-            if entry_id != "yaml_export" and hasattr(coord, 'data'):
+            if entry_id != YAML_EXPORT_KEY and hasattr(coord, 'data'):
                 coordinator = coord
                 break
         

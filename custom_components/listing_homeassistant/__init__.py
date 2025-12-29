@@ -118,14 +118,15 @@ class ListingDataUpdateCoordinator(DataUpdateCoordinator):
                 data["entities"][domain] = []
             
             state = self.hass.states.get(entity.entity_id)
-            data["entities"][domain].append({
+            entity_data = {
                 "entity_id": entity.entity_id,
                 "name": entity.name or entity.original_name,
                 "device_id": entity.device_id,
                 "platform": entity.platform,
                 "state": state.state if state else "unavailable",
-                "attributes": dict(state.attributes) if state else {},
-            })
+                "attributes": dict(state.attributes) if state and state.attributes else {},
+            }
+            data["entities"][domain].append(entity_data)
         
         # Get automations, scripts, scenes, and inputs
         for state in self.hass.states.async_all():
