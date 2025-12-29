@@ -64,7 +64,7 @@ class ListingHomeAssistantCard extends HTMLElement {
           min-width: 150px;
           padding: 12px 24px;
           background: var(--primary-color);
-          color: var(--primary-text-color);
+          color: var(--text-primary-color, white);
           border: none;
           border-radius: 4px;
           cursor: pointer;
@@ -184,12 +184,33 @@ class ListingHomeAssistantCard extends HTMLElement {
             a.click();
             window.URL.revokeObjectURL(url);
             document.body.removeChild(a);
+            
+            // Show success notification using HA toast
+            if (hass.callService) {
+              hass.callService('persistent_notification', 'create', {
+                message: `Fichier exporté avec succès : ${filename}`,
+                title: 'Export YAML réussi',
+              });
+            }
           } else {
-            alert('Erreur lors de l\'export YAML');
+            // Show error using HA persistent notification
+            if (hass.callService) {
+              hass.callService('persistent_notification', 'create', {
+                message: `Erreur ${response.status}: ${response.statusText}`,
+                title: 'Erreur lors de l\'export YAML',
+              });
+            }
+            console.error('Export failed:', response.status, response.statusText);
           }
         } catch (error) {
           console.error('Error downloading YAML:', error);
-          alert('Erreur lors du téléchargement du fichier YAML');
+          // Show error using HA persistent notification
+          if (hass.callService) {
+            hass.callService('persistent_notification', 'create', {
+              message: `Erreur lors du téléchargement: ${error.message}`,
+              title: 'Erreur d\'export YAML',
+            });
+          }
         }
       };
     }

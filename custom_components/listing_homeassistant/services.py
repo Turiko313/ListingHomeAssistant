@@ -4,6 +4,7 @@ from __future__ import annotations
 import logging
 
 from homeassistant.core import HomeAssistant, ServiceCall
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 import voluptuous as vol
 
 from .const import DOMAIN
@@ -22,10 +23,10 @@ async def async_setup_services(hass: HomeAssistant) -> None:
         """Handle the refresh service call."""
         _LOGGER.info("Refreshing Listing Home Assistant data")
         
-        # Refresh all coordinators (filter to only coordinators with async_refresh method)
-        for entry_id, coordinator in hass.data[DOMAIN].items():
-            if hasattr(coordinator, 'async_refresh') and callable(coordinator.async_refresh):
-                await coordinator.async_refresh()
+        # Refresh only DataUpdateCoordinator instances
+        for entry_id, obj in hass.data[DOMAIN].items():
+            if isinstance(obj, DataUpdateCoordinator):
+                await obj.async_refresh()
 
     hass.services.async_register(
         DOMAIN,
