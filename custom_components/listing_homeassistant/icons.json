@@ -1,0 +1,7 @@
+{
+  "component": {
+    "listing_homeassistant": {
+      "default": "mdi:file-document"
+    }
+  }
+}

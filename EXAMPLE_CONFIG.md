@@ -1,0 +1,180 @@
+# Configuration d'exemple pour Listing Home Assistant
+
+## Installation
+
+1. Copiez le dossier `custom_components/listing_homeassistant` dans votre dossier `custom_components` de Home Assistant
+2. Redémarrez Home Assistant
+3. Allez dans Paramètres > Appareils et services > + Ajouter une intégration
+4. Recherchez "Listing Home Assistant" et ajoutez-le
+
+## Configuration de la carte personnalisée
+
+### Méthode 1 : Via l'interface utilisateur
+
+1. Allez dans Paramètres > Tableaux de bord > Menu (3 points) > Ressources
+2. Cliquez sur "+ Ajouter une ressource"
+3. URL : `/listing_homeassistant/listing-homeassistant-card.js`
+4. Type de ressource : Module JavaScript
+5. Cliquez sur "Créer"
+
+### Méthode 2 : Via YAML
+
+Ajoutez dans votre `configuration.yaml` :
+
+```yaml
+lovelace:
+  mode: yaml
+  resources:
+    - url: /listing_homeassistant/listing-homeassistant-card.js
+      type: module
+```
+
+## Exemple de tableau de bord
+
+### Avec la carte personnalisée
+
+```yaml
+title: Listing Home Assistant
+views:
+  - title: Vue d'ensemble
+    cards:
+      - type: custom:listing-homeassistant-card
+```
+
+### Avec les entités standard
+
+```yaml
+title: Listing Home Assistant
+views:
+  - title: Vue d'ensemble
+    cards:
+      - type: entities
+        title: Résumé
+        entities:
+          - entity: sensor.listing_home_assistant_summary
+            name: Résumé
+      
+      - type: grid
+        columns: 3
+        cards:
+          - type: entity
+            entity: sensor.listing_home_assistant_devices
+            name: Appareils
+            icon: mdi:devices
+          - type: entity
+            entity: sensor.listing_home_assistant_entities
+            name: Entités
+            icon: mdi:format-list-bulleted
+          - type: entity
+            entity: sensor.listing_home_assistant_automations
+            name: Automatisations
+            icon: mdi:robot
+          - type: entity
+            entity: sensor.listing_home_assistant_scripts
+            name: Scripts
+            icon: mdi:script-text
+          - type: entity
+            entity: sensor.listing_home_assistant_scenes
+            name: Scènes
+            icon: mdi:palette
+          - type: entity
+            entity: sensor.listing_home_assistant_inputs
+            name: Inputs
+            icon: mdi:form-textbox
+```
+
+## Configuration des options
+
+Une fois l'intégration installée, vous pouvez configurer l'intervalle de mise à jour :
+
+1. Allez dans Paramètres > Appareils et services
+2. Trouvez "Listing Home Assistant"
+3. Cliquez sur "Configurer"
+4. Sélectionnez l'intervalle de mise à jour souhaité :
+   - Toutes les heures (par défaut)
+   - Toutes les 6 heures
+   - Toutes les 12 heures
+   - Tous les jours
+
+## Exemples d'automatisations
+
+### Actualisation quotidienne
+
+```yaml
+automation:
+  - alias: "Actualisation quotidienne du listing"
+    trigger:
+      - platform: time
+        at: "00:00:00"
+    action:
+      - service: listing_homeassistant.refresh
+```
+
+### Notification des changements
+
+```yaml
+automation:
+  - alias: "Notification nouveau device"
+    trigger:
+      - platform: state
+        entity_id: sensor.listing_home_assistant_devices
+    action:
+      - service: notify.mobile_app
+        data:
+          title: "Nouveau device détecté"
+          message: "Nombre total de devices : {{ states('sensor.listing_home_assistant_devices') }}"
+```
+
+## Utilisation des templates
+
+Vous pouvez utiliser les données dans vos templates :
+
+```yaml
+sensor:
+  - platform: template
+    sensors:
+      total_lights:
+        friendly_name: "Total Lumières"
+        value_template: >
+          {{ state_attr('sensor.listing_home_assistant_entities', 'entities_by_domain').light | length if state_attr('sensor.listing_home_assistant_entities', 'entities_by_domain') else 0 }}
+```
+
+## Export YAML
+
+### Via la carte personnalisée
+
+Cliquez simplement sur le bouton "Exporter YAML" dans la carte personnalisée.
+
+### Via l'URL directe
+
+Accédez à : `http://your-home-assistant:8123/api/listing_homeassistant/download`
+
+Le fichier sera téléchargé automatiquement avec le format : `listing_homeassistant_YYYYMMDD_HHMMSS.yaml`
+
+### Via curl
+
+```bash
+curl -H "Authorization: Bearer YOUR_LONG_LIVED_ACCESS_TOKEN" \
+     http://your-home-assistant:8123/api/listing_homeassistant/download \
+     -o listing_homeassistant.yaml
+```
+
+## Dépannage
+
+### L'intégration n'apparaît pas
+
+1. Vérifiez que le dossier `custom_components/listing_homeassistant` est bien dans votre dossier de configuration
+2. Redémarrez Home Assistant
+3. Vérifiez les logs pour des erreurs
+
+### La carte personnalisée ne s'affiche pas
+
+1. Vérifiez que la ressource est bien ajoutée
+2. Videz le cache de votre navigateur (Ctrl+F5)
+3. Vérifiez les erreurs dans la console du navigateur (F12)
+
+### Données manquantes
+
+1. Utilisez le service `listing_homeassistant.refresh` pour forcer une actualisation
+2. Vérifiez les permissions de l'intégration
+3. Consultez les logs de Home Assistant
