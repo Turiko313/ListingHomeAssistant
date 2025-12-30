@@ -11,6 +11,7 @@ from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.components.frontend import add_extra_js_url
+from homeassistant.components.http import HomeAssistantView
 
 from .const import DOMAIN, CONF_UPDATE_INTERVAL
 from .services import async_setup_services, async_unload_services
@@ -19,6 +20,39 @@ from .download import async_setup_download_handler
 _LOGGER = logging.getLogger(__name__)
 
 PLATFORMS: list[Platform] = [Platform.SENSOR]
+
+
+class ListingCardView(HomeAssistantView):
+    """View to serve the listing home assistant card JavaScript."""
+    
+    url = "/api/listing_homeassistant/card"
+    name = "api:listing_homeassistant:card"
+    requires_auth = True
+    
+    def __init__(self, hass: HomeAssistant) -> None:
+        """Initialize the view."""
+        self.hass = hass
+    
+    async def get(self, request):
+        """Handle GET request for the card JavaScript."""
+        card_dir = self.hass.config.path("custom_components/listing_homeassistant/www")
+        card_file = os.path.join(card_dir, "listing-homeassistant-card.js")
+        
+        if not os.path.exists(card_file):
+            return web.Response(text="Card file not found", status=404)
+        
+        try:
+            with open(card_file, 'r', encoding='utf-8') as f:
+                content = f.read()
+            
+            return web.Response(
+                text=content,
+                content_type='application/javascript',
+                headers={'Cache-Control': 'no-cache'}
+            )
+        except Exception as e:
+            _LOGGER.error(f"Error reading card file: {e}")
+            return web.Response(text="Error reading card file", status=500)
 
 
 @dataclass(slots=True)
@@ -43,37 +77,17 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     _LOGGER.info(f"HACS detected: {is_hacs}")
     
     if os.path.exists(card_dir):
-        # Try to register static path - handle different HA versions
-        try:
-            # Try modern HA API (2024.x+)
-            if hasattr(hass.http, 'async_register_static_paths'):
-                from homeassistant.components.http.static import StaticPathConfig
-                config = StaticPathConfig(
-                    url_path="/listing_homeassistant",
-                    path=card_dir,
-                    cache_headers=False
-                )
-                await hass.http.async_register_static_paths([config])
-                _LOGGER.info("Static path registered using async_register_static_paths")
-            elif hasattr(hass.http, 'register_static_path'):
-                # Try legacy API
-                hass.http.register_static_path(
-                    "/listing_homeassistant",
-                    card_dir,
-                    cache_headers=False
-                )
-                _LOGGER.info("Static path registered using register_static_path")
-            else:
-                _LOGGER.warning("No static path registration method available - card may not load")
-        except (ImportError, AttributeError, Exception) as e:
-            _LOGGER.warning(f"Failed to register static path: {e} - card may not load")
+        # Register API endpoint to serve the card JavaScript
+        card_view = ListingCardView(hass)
+        hass.http.register_view(card_view)
+        _LOGGER.info("Card API endpoint registered at /api/listing_homeassistant/card")
         
-        # Register the card as a frontend resource
-        card_url = "/listing_homeassistant/listing-homeassistant-card.js"
+        # Register the card as a frontend resource using the API endpoint
+        card_url = "/api/listing_homeassistant/card"
         _LOGGER.info(f"Adding frontend resource: {card_url}")
         add_extra_js_url(hass, card_url)
         
-        _LOGGER.info("Frontend resources registered")
+        _LOGGER.info("Frontend resources registered via API endpoint")
     else:
         _LOGGER.error(f"Card directory not found: {card_dir}")
     
