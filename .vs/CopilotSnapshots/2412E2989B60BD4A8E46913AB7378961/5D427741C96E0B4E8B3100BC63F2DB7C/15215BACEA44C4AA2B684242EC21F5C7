@@ -1,49 +1,9 @@
-# Changelog
+﻿# Changelog
 
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-## [1.1.0] - 2024-12-30
-
-### Added
-
-- **Button entities** for better integration control:
-  - `button.actualiser_les_donnees` - Manual refresh button
-  - `button.exporter_en_yaml` - Export button that creates notification with download link
-- **Select entity** for configuration:
-  - `select.intervalle_de_mise_a_jour` - Configure automatic update interval directly from dashboard
-- Entity-based configuration instead of UI options flow
-- Persistent notifications for export with direct download links
-
-### Changed
-
-- **BREAKING**: Removed custom Lovelace card in favor of native Home Assistant entities
-- Simplified configuration interface to show statistics only
-- All configuration now done via entities (select, buttons)
-- Updated documentation to reflect entity-based approach
-- Improved user experience with native HA controls
-
-### Removed
-
-- Custom Lovelace card (`listing-homeassistant-card`)
-- Frontend JavaScript file
-- Static path registration complexity
-- CARD_DOCUMENTATION.md (no longer needed)
-
-### Fixed
-
-- ConfigFlow compatibility issues with Home Assistant 2025.x
-- Static path registration errors
-- Import issues with HomeAssistantView
-
-### Technical Changes
-
-- Added Button platform support
-- Added Select platform support
-- Simplified manifest.json (removed frontend configuration)
-- Cleaner code architecture without custom card complexity
 
 ## [1.0.0] - 2024-12-29
 
@@ -72,11 +32,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Every day
 - YAML export functionality with download handler
 - Direct download URL: `/api/listing_homeassistant/download`
+- Custom Lovelace card for visualization and export
 - Sorted and structured YAML export format
 - Material Design icons for better UX
 - French and English translations
 - HACS compatibility
 - Comprehensive documentation
 
-[1.1.0]: https://github.com/Turiko313/ListingHomeAssistant/releases/tag/v1.1.0
+### Features
+
+#### Data Collection
+- Collects all devices with manufacturer, model, and software version
+- Collects all entities with state and attributes
+- Groups entities by domain
+- Tracks automation states and last triggered times
+- Includes all scripts and scenes
+- Includes all input entities
+
+#### Export Format
+- Hierarchical YAML structure
+- Sorted by entity ID and name
+- Includes summary statistics
+- Timestamp of export
+- Full entity details including states and attributes
+
+#### User Interface
+- Custom Lovelace card with statistics display
+- Refresh button for manual updates
+- Export button for one-click YAML download
+- Last update timestamp display
+- Material Design icons
+
+### Technical Details
+- Minimum Home Assistant version: 2023.1.0
+- Uses DataUpdateCoordinator for efficient updates
+- Async/await for non-blocking operations
+- Proper error handling and logging
+- Integration with Home Assistant's entity and device registries
+
+### Documentation
+- Complete README with installation and usage instructions
+- HACS installation guide
+- Card documentation
+- Example configurations
+- Troubleshooting guide
+- French translations
+
 [1.0.0]: https://github.com/Turiko313/ListingHomeAssistant/releases/tag/v1.0.0
