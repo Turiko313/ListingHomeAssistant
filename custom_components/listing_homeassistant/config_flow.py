@@ -15,10 +15,11 @@ from .const import DOMAIN, CONF_UPDATE_INTERVAL, UPDATE_INTERVALS
 _LOGGER = logging.getLogger(__name__)
 
 
-class ListingHomeAssistantConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
+class ListingHomeAssistantConfigFlow(config_entries.ConfigFlow):
     """Handle a config flow for Listing Home Assistant."""
 
     VERSION = 1
+    DOMAIN = DOMAIN
 
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
