@@ -1,0 +1,30 @@
+﻿{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Listing Home Assistant",
+        "description": "Configurez l'intégration Listing Home Assistant pour lister tous les appareils, entités, automatisations, scripts, scènes, et plus."
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Une seule instance est autorisée."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Options Listing Home Assistant",
+        "description": "Configurez l'intervalle de mise à jour pour l'actualisation automatique.",
+        "data": {
+          "update_interval": "Intervalle de mise à jour"
+        }
+      }
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "Actualiser",
+      "description": "Actualiser manuellement les données de listing"
+    }
+  }
+}

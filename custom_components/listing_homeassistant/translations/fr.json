@@ -13,9 +13,10 @@
   "options": {
     "step": {
       "init": {
-        "title": "Options Listing Home Assistant",
-        "description": "Configurez l'intervalle de mise à jour pour l'actualisation automatique.",
+        "title": "Listing Home Assistant",
+        "description": "{stats}\n\nActions disponibles :",
         "data": {
+          "action": "Action",
           "update_interval": "Intervalle de mise à jour"
         }
       }

@@ -22,70 +22,9 @@ _LOGGER = logging.getLogger(__name__)
 PLATFORMS: list[Platform] = [Platform.SENSOR]
 
 
-class ListingCardView(HomeAssistantView):
-    """View to serve the listing home assistant card JavaScript."""
-    
-    url = "/api/listing_homeassistant/listing-homeassistant-card.js"
-    name = "api:listing_homeassistant:card"
-    requires_auth = True
-    
-    def __init__(self, hass: HomeAssistant) -> None:
-        """Initialize the view."""
-        self.hass = hass
-    
-    async def get(self, request):
-        """Handle GET request for the card JavaScript."""
-        card_dir = self.hass.config.path("custom_components/listing_homeassistant/www")
-        card_file = os.path.join(card_dir, "listing-homeassistant-card.js")
-        
-        if not os.path.exists(card_file):
-            return web.Response(text="Card file not found", status=404)
-        
-        try:
-            with open(card_file, 'r', encoding='utf-8') as f:
-                content = f.read()
-            
-            return web.Response(
-                text=content,
-                content_type='application/javascript',
-                headers={'Cache-Control': 'no-cache'}
-            )
-        except Exception as e:
-            _LOGGER.error(f"Error reading card file: {e}")
-            return web.Response(text="Error reading card file", status=500)
-
-
-@dataclass(slots=True)
-class StaticPathConfig:
-    """Configuration for a static path."""
-    url_path: str
-    path: str
-    cache_headers: bool = True
-
-
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Listing Home Assistant from a config entry."""
     hass.data.setdefault(DOMAIN, {})
-    
-    # Register static path for frontend card
-    card_dir = hass.config.path("custom_components/listing_homeassistant/www")
-    _LOGGER.info(f"Registering static path for card at: {card_dir}")
-    
-    # Try to detect HACS installation
-    hacs_path = hass.config.path("custom_components/hacs")
-    is_hacs = os.path.exists(hacs_path)
-    _LOGGER.info(f"HACS detected: {is_hacs}")
-    
-    if os.path.exists(card_dir):
-        # Register API endpoint to serve the card JavaScript
-        card_view = ListingCardView(hass)
-        hass.http.register_view(card_view)
-        _LOGGER.info("Card API endpoint registered at /api/listing_homeassistant/listing-homeassistant-card.js")
-        
-        # Frontend resource is now automatically registered via manifest.json
-        _LOGGER.info("Frontend resources registered via manifest.json")
-    else:
-        _LOGGER.error(f"Card directory not found: {card_dir}")
     
     # Get update interval from options, default to 3600 seconds (1 hour)
     update_interval = entry.options.get(CONF_UPDATE_INTERVAL, 3600)

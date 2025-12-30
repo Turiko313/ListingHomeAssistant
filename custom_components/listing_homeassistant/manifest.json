@@ -8,10 +8,5 @@
   "codeowners": ["@Turiko313"],
   "dependencies": [],
   "requirements": [],
-  "iot_class": "local_polling",
-  "frontend": {
-    "extra_module_url": [
-      "/api/listing_homeassistant/listing-homeassistant-card.js"
-    ]
-  }
+  "iot_class": "local_polling"
 }

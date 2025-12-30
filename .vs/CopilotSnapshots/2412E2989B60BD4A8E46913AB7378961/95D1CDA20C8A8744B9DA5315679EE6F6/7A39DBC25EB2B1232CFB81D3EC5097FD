@@ -1,0 +1,25 @@
+﻿{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Listing Home Assistant",
+        "description": "Set up the Listing Home Assistant integration to list all devices, entities, automations, scripts, scenes, and more."
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Only a single instance is allowed."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Listing Home Assistant",
+        "description": "{stats}\n\nActions disponibles:",
+        "data": {
+          "action": "Action",
+          "update_interval": "Intervalle de mise à jour"
+        }
+      }
+    }
+  }
+}
