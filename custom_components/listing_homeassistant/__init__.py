@@ -24,22 +24,38 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Listing Home Assistant from a config entry."""
     hass.data.setdefault(DOMAIN, {})
     
+    # Try to detect HACS installation
+    hacs_path = hass.config.path("custom_components/hacs")
+    is_hacs = os.path.exists(hacs_path)
+    
     # Register static path for frontend card
     card_dir = hass.config.path("custom_components/listing_homeassistant/www")
     _LOGGER.info(f"Registering static path for card at: {card_dir}")
+    _LOGGER.info(f"HACS detected: {is_hacs}")
     
     if os.path.exists(card_dir):
+        # Register static path
         hass.http.register_static_path(
             "/listing_homeassistant",
             card_dir,
             cache_headers=False,
         )
-        _LOGGER.info("Static path registered successfully")
+        _LOGGER.info("Static path registered successfully at /listing_homeassistant")
         
-        # Register the card as a frontend resource
-        card_url = "/listing_homeassistant/listing-homeassistant-card.js"
-        _LOGGER.info(f"Adding frontend resource: {card_url}")
-        add_extra_js_url(hass, card_url)
+        # Try multiple URLs to ensure card loads
+        card_urls = [
+            "/listing_homeassistant/listing-homeassistant-card.js",
+            "/hacsfiles/listing_homeassistant/listing-homeassistant-card.js",
+        ]
+        
+        for card_url in card_urls:
+            try:
+                _LOGGER.info(f"Attempting to add frontend resource: {card_url}")
+                add_extra_js_url(hass, card_url)
+            except Exception as e:
+                _LOGGER.warning(f"Failed to add {card_url}: {e}")
+        
+        _LOGGER.info("Frontend resources registered")
     else:
         _LOGGER.error(f"Card directory not found: {card_dir}")
     
