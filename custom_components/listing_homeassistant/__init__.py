@@ -11,6 +11,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
+from homeassistant.components.http import HomeAssistantView
 
 from .const import DOMAIN, CONF_UPDATE_INTERVAL
 from .services import async_setup_services, async_unload_services

@@ -10,6 +10,8 @@
   "requirements": [],
   "iot_class": "local_polling",
   "frontend": {
-    "module_url": "/api/listing_homeassistant/listing-homeassistant-card.js"
+    "extra_module_url": [
+      "/api/listing_homeassistant/listing-homeassistant-card.js"
+    ]
   }
 }
