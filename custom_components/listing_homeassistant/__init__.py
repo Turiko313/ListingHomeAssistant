@@ -34,12 +34,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     _LOGGER.info(f"HACS detected: {is_hacs}")
     
     if os.path.exists(card_dir):
-        # Register static path using correct method
-        hass.http.register_static_path(
-            "/listing_homeassistant",
-            card_dir,
-            cache_headers=False
-        )
+        # Register static path using correct async method
+        await hass.http.async_register_static_paths([
+            {
+                "url_path": "/listing_homeassistant",
+                "path": card_dir,
+                "cache_headers": False
+            }
+        ])
         _LOGGER.info("Static path registered successfully at /listing_homeassistant")
         
         # Register the card as a frontend resource
