@@ -34,14 +34,28 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     _LOGGER.info(f"HACS detected: {is_hacs}")
     
     if os.path.exists(card_dir):
-        # Register static path using correct async method
-        await hass.http.async_register_static_paths([
-            {
-                "url_path": "/listing_homeassistant",
-                "path": card_dir,
-                "cache_headers": False
-            }
-        ])
+        # Register static path - handle both old and new API
+        try:
+            # Try new API first (Home Assistant 2024.x+)
+            from homeassistant.components.http.static import StaticPathConfig
+            config = StaticPathConfig(
+                url_path="/listing_homeassistant",
+                path=card_dir,
+                cache_headers=False
+            )
+            await hass.http.async_register_static_paths([config])
+        except (ImportError, AttributeError):
+            # Fallback to old API if available
+            try:
+                hass.http.register_static_path(
+                    "/listing_homeassistant",
+                    card_dir,
+                    cache_headers=False
+                )
+            except AttributeError:
+                _LOGGER.error("Unable to register static path - unsupported Home Assistant version")
+                return False
+        
         _LOGGER.info("Static path registered successfully at /listing_homeassistant")
         
         # Register the card as a frontend resource
