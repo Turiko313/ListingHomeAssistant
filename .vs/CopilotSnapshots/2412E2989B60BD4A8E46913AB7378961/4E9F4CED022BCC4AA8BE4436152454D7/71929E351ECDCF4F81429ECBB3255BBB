@@ -1,4 +1,4 @@
-# Changelog
+ï»¿# Changelog
 
 All notable changes to this project will be documented in this file.
 
@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Remove unused `logging` import from config_flow.py
-- Match EXACTLY the working Alarme Personnalisée integration structure
+- Match EXACTLY the working Alarme PersonnalisÃ©e integration structure
 - Minimal imports only (no logging in ConfigFlow)
 
 ## [1.1.2] - 2024-12-30
@@ -27,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Use `config_entries.FlowResult` instead of `FlowResult` for proper type hinting
-- Match the working pattern from Alarme Personnalisée integration
+- Match the working pattern from Alarme PersonnalisÃ©e integration
 - Resolve "Invalid handler specified" error definitively
 
 ## [1.1.1] - 2024-12-30

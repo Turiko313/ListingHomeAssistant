@@ -1,11 +1,11 @@
-"""Config flow for Listing Home Assistant integration."""
+﻿"""Config flow for Listing Home Assistant integration."""
 from __future__ import annotations
 
 from typing import Any
 
 import voluptuous as vol
 
-from homeassistant.config_entries import ConfigFlow, ConfigFlowResult, OptionsFlow
+from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
 from homeassistant.core import callback
 
 from .const import DOMAIN, CONF_UPDATE_INTERVAL, UPDATE_INTERVALS
@@ -34,22 +34,22 @@ class ListingHomeAssistantConfigFlow(ConfigFlow, domain=DOMAIN):
     @staticmethod
     @callback
     def async_get_options_flow(
-        config_entry,
-    ):
+        config_entry: config_entries.ConfigEntry,
+    ) -> ListingHomeAssistantOptionsFlow:
         """Get the options flow for this handler."""
         return ListingHomeAssistantOptionsFlow(config_entry)
 
 
-class ListingHomeAssistantOptionsFlow(OptionsFlow):
+class ListingHomeAssistantOptionsFlow(config_entries.OptionsFlow):
     """Handle options flow for Listing Home Assistant."""
 
-    def __init__(self, config_entry) -> None:
+    def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
         """Initialize options flow."""
         self._config_entry = config_entry
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
-    ) -> ConfigFlowResult:
+    ) -> config_entries.FlowResult:
         """Manage the options."""
         # Get statistics from coordinator
         coordinator = None
@@ -58,19 +58,19 @@ class ListingHomeAssistantOptionsFlow(OptionsFlow):
                 coordinator = coord
                 break
 
-        stats_text = "?? Statistiques actuelles:\n\n"
+        stats_text = "📊 Statistiques actuelles:\n\n"
         if coordinator and coordinator.data:
             data = coordinator.data
-            stats_text += f"?? Appareils: {len(data.get('devices', []))}\n"
-            stats_text += f"?? Entit�s: {sum(len(v) for v in data.get('entities', {}).values())}\n"
-            stats_text += f"?? Automatisations: {len(data.get('automations', []))}\n"
-            stats_text += f"?? Scripts: {len(data.get('scripts', []))}\n"
-            stats_text += f"?? Sc�nes: {len(data.get('scenes', []))}\n"
-            stats_text += f"?? Inputs: {sum(len(v) for v in data.get('inputs', {}).values())}\n\n"
-            stats_text += "?? Utilisez les entit�s boutons et select pour g�rer l'int�gration."
+            stats_text += f"📱 Appareils: {len(data.get('devices', []))}\n"
+            stats_text += f"🔧 Entités: {sum(len(v) for v in data.get('entities', {}).values())}\n"
+            stats_text += f"🤖 Automatisations: {len(data.get('automations', []))}\n"
+            stats_text += f"📜 Scripts: {len(data.get('scripts', []))}\n"
+            stats_text += f"🎨 Scènes: {len(data.get('scenes', []))}\n"
+            stats_text += f"📝 Inputs: {sum(len(v) for v in data.get('inputs', {}).values())}\n\n"
+            stats_text += "💡 Utilisez les entités boutons et select pour gérer l'intégration."
         else:
-            stats_text += "Aucune donn�e disponible.\n\n"
-            stats_text += "?? Utilisez le bouton 'Actualiser les donn�es' pour collecter les informations."
+            stats_text += "Aucune donnée disponible.\n\n"
+            stats_text += "💡 Utilisez le bouton 'Actualiser les données' pour collecter les informations."
 
         # Just show info, all configuration is done via entities
         return self.async_show_form(
