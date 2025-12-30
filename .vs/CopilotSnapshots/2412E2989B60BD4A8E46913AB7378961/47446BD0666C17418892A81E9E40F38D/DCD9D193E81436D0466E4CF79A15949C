@@ -1,4 +1,4 @@
-"""Button platform for Listing Home Assistant."""
+﻿"""Button platform for Listing Home Assistant."""
 from __future__ import annotations
 
 import logging
@@ -38,7 +38,7 @@ class ListingRefreshButton(CoordinatorEntity, ButtonEntity):
         """Initialize the button."""
         super().__init__(coordinator)
         self._entry = entry
-        self._attr_name = "Actualiser les donnees"
+        self._attr_name = "Actualiser les données"
         self._attr_unique_id = f"{entry.entry_id}_refresh"
         self._attr_icon = "mdi:refresh"
         self._attr_entity_category = None
@@ -91,13 +91,13 @@ class ListingExportButton(CoordinatorEntity, ButtonEntity):
         # Create a persistent notification with download link
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         message = (
-            f"Votre export YAML est pret !\n\n"
-            f"?? [Telecharger le fichier YAML](/api/listing_homeassistant/download)\n\n"
-            f"Le fichier sera nomme: listing_homeassistant_{timestamp}.yaml"
+            f"Votre export YAML est prêt !\n\n"
+            f"📥 [Télécharger le fichier YAML](/api/listing_homeassistant/download)\n\n"
+            f"Le fichier sera nommé: listing_homeassistant_{timestamp}.yaml"
         )
         
         self._hass.components.persistent_notification.async_create(
             message,
-            title="?? Export YAML disponible",
+            title="📊 Export YAML disponible",
             notification_id=f"listing_homeassistant_export_{timestamp}"
         )

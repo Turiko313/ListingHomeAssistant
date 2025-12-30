@@ -1,4 +1,4 @@
-"""Button platform for Listing Home Assistant."""
+﻿"""Button platform for Listing Home Assistant."""
 from __future__ import annotations
 
 import logging
@@ -92,12 +92,12 @@ class ListingExportButton(CoordinatorEntity, ButtonEntity):
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         message = (
             f"Votre export YAML est pret !\n\n"
-            f"?? [Telecharger le fichier YAML](/api/listing_homeassistant/download)\n\n"
+            f"📥 [Telecharger le fichier YAML](/api/listing_homeassistant/download)\n\n"
             f"Le fichier sera nomme: listing_homeassistant_{timestamp}.yaml"
         )
         
         self._hass.components.persistent_notification.async_create(
             message,
-            title="?? Export YAML disponible",
+            title="📊 Export YAML disponible",
             notification_id=f"listing_homeassistant_export_{timestamp}"
         )

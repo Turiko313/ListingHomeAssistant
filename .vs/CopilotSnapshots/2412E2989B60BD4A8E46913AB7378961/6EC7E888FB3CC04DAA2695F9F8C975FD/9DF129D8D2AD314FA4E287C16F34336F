@@ -1,4 +1,4 @@
-{
+﻿{
   "config": {
     "step": {
       "user": {
@@ -14,7 +14,7 @@
     "step": {
       "init": {
         "title": "Listing Home Assistant",
-        "description": "Configurez l'intervalle d'actualisation automatique."
+        "description": "{stats}"
       }
     }
   },
