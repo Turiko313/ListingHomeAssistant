@@ -33,7 +33,7 @@ class ListingHomeAssistantConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 data={},
             )
 
-        return self.async_show_form(step_id="user")
+        return self.async_show_form(step_id="user", data_schema=vol.Schema({}))
 
     @staticmethod
     @callback
