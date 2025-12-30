@@ -37,11 +37,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     
-    # Register services
-    await async_setup_services(hass)
+    # Register services only once (check if already registered)
+    if not hass.services.has_service(DOMAIN, "refresh"):
+        await async_setup_services(hass)
     
-    # Register download handler
-    await async_setup_download_handler(hass)
+    # Register download handler only once
+    if not hasattr(hass.http, f"_listing_homeassistant_download_registered"):
+        await async_setup_download_handler(hass)
+        setattr(hass.http, f"_listing_homeassistant_download_registered", True)
     
     # Register update listener
     entry.async_on_unload(entry.add_update_listener(update_listener))
@@ -51,11 +54,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
-    # Unload services
-    await async_unload_services(hass)
-    
     if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
         hass.data[DOMAIN].pop(entry.entry_id)
+        
+        # Only unload services if this is the last entry
+        if not hass.data[DOMAIN]:
+            await async_unload_services(hass)
+            if hasattr(hass.http, f"_listing_homeassistant_download_registered"):
+                delattr(hass.http, f"_listing_homeassistant_download_registered")
     
     return unload_ok
 
