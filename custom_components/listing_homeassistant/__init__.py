@@ -43,18 +43,30 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     _LOGGER.info(f"HACS detected: {is_hacs}")
     
     if os.path.exists(card_dir):
-        # Register static path - use synchronous method
+        # Try to register static path - handle different HA versions
         try:
-            hass.http.register_static_path(
-                "/listing_homeassistant",
-                card_dir,
-                cache_headers=False
-            )
-            _LOGGER.info("Static path registered successfully at /listing_homeassistant")
-        except AttributeError as e:
-            _LOGGER.error(f"Failed to register static path: {e}")
-            _LOGGER.error("This integration requires a newer version of Home Assistant")
-            return False
+            # Try modern HA API (2024.x+)
+            if hasattr(hass.http, 'async_register_static_paths'):
+                from homeassistant.components.http.static import StaticPathConfig
+                config = StaticPathConfig(
+                    url_path="/listing_homeassistant",
+                    path=card_dir,
+                    cache_headers=False
+                )
+                await hass.http.async_register_static_paths([config])
+                _LOGGER.info("Static path registered using async_register_static_paths")
+            elif hasattr(hass.http, 'register_static_path'):
+                # Try legacy API
+                hass.http.register_static_path(
+                    "/listing_homeassistant",
+                    card_dir,
+                    cache_headers=False
+                )
+                _LOGGER.info("Static path registered using register_static_path")
+            else:
+                _LOGGER.warning("No static path registration method available - card may not load")
+        except (ImportError, AttributeError, Exception) as e:
+            _LOGGER.warning(f"Failed to register static path: {e} - card may not load")
         
         # Register the card as a frontend resource
         card_url = "/listing_homeassistant/listing-homeassistant-card.js"
