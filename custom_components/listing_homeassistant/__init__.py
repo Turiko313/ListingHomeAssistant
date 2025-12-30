@@ -22,6 +22,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Listing Home Assistant from a config entry."""
     hass.data.setdefault(DOMAIN, {})
     
+    # Register static path for frontend card
+    hass.http.register_static_path(
+        "/listing_homeassistant",
+        hass.config.path("custom_components/listing_homeassistant/www"),
+        cache_headers=False,
+    )
+    
     # Get update interval from options, default to 3600 seconds (1 hour)
     update_interval = entry.options.get(CONF_UPDATE_INTERVAL, 3600)
     
