@@ -3,11 +3,13 @@ from __future__ import annotations
 
 import logging
 from datetime import timedelta
+import os
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
+from homeassistant.components.frontend import add_extra_js_url
 
 from .const import DOMAIN, CONF_UPDATE_INTERVAL
 from .services import async_setup_services, async_unload_services
@@ -23,11 +25,23 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data.setdefault(DOMAIN, {})
     
     # Register static path for frontend card
-    hass.http.register_static_path(
-        "/listing_homeassistant",
-        hass.config.path("custom_components/listing_homeassistant/www"),
-        cache_headers=False,
-    )
+    card_dir = hass.config.path("custom_components/listing_homeassistant/www")
+    _LOGGER.info(f"Registering static path for card at: {card_dir}")
+    
+    if os.path.exists(card_dir):
+        hass.http.register_static_path(
+            "/listing_homeassistant",
+            card_dir,
+            cache_headers=False,
+        )
+        _LOGGER.info("Static path registered successfully")
+        
+        # Register the card as a frontend resource
+        card_url = "/listing_homeassistant/listing-homeassistant-card.js"
+        _LOGGER.info(f"Adding frontend resource: {card_url}")
+        add_extra_js_url(hass, card_url)
+    else:
+        _LOGGER.error(f"Card directory not found: {card_dir}")
     
     # Get update interval from options, default to 3600 seconds (1 hour)
     update_interval = entry.options.get(CONF_UPDATE_INTERVAL, 3600)
