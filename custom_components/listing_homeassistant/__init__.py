@@ -11,8 +11,6 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
-from homeassistant.components.frontend import add_extra_js_url
-from homeassistant.components.http import HomeAssistantView
 
 from .const import DOMAIN, CONF_UPDATE_INTERVAL
 from .services import async_setup_services, async_unload_services
@@ -81,14 +79,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         # Register API endpoint to serve the card JavaScript
         card_view = ListingCardView(hass)
         hass.http.register_view(card_view)
-        _LOGGER.info("Card API endpoint registered at /api/listing_homeassistant/card")
+        _LOGGER.info("Card API endpoint registered at /api/listing_homeassistant/listing-homeassistant-card.js")
         
-        # Register the card as a frontend resource using the API endpoint
-        card_url = "/api/listing_homeassistant/listing-homeassistant-card.js"
-        _LOGGER.info(f"Adding frontend resource: {card_url}")
-        add_extra_js_url(hass, card_url)
-        
-        _LOGGER.info("Frontend resources registered via API endpoint")
+        # Frontend resource is now automatically registered via manifest.json
+        _LOGGER.info("Frontend resources registered via manifest.json")
     else:
         _LOGGER.error(f"Card directory not found: {card_dir}")
     
