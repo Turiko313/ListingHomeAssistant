@@ -6,6 +6,7 @@ from datetime import timedelta
 import os
 from dataclasses import dataclass
 
+from aiohttp import web
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
