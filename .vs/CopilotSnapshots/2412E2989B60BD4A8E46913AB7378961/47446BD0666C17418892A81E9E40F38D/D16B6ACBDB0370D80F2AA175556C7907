@@ -1,4 +1,4 @@
-"""Config flow for Listing Home Assistant integration."""
+﻿"""Config flow for Listing Home Assistant integration."""
 from __future__ import annotations
 
 import logging
@@ -62,19 +62,19 @@ class ListingHomeAssistantOptionsFlow(config_entries.OptionsFlow):
                 coordinator = coord
                 break
 
-        stats_text = "?? Statistiques actuelles:\n\n"
+        stats_text = "📊 Statistiques actuelles:\n\n"
         if coordinator and coordinator.data:
             data = coordinator.data
-            stats_text += f"?? Appareils: {len(data.get('devices', []))}\n"
-            stats_text += f"?? Entit�s: {sum(len(v) for v in data.get('entities', {}).values())}\n"
-            stats_text += f"?? Automatisations: {len(data.get('automations', []))}\n"
-            stats_text += f"?? Scripts: {len(data.get('scripts', []))}\n"
-            stats_text += f"?? Sc�nes: {len(data.get('scenes', []))}\n"
-            stats_text += f"?? Inputs: {sum(len(v) for v in data.get('inputs', {}).values())}\n\n"
-            stats_text += "?? Utilisez les entit�s boutons et select pour g�rer l'int�gration."
+            stats_text += f"📱 Appareils: {len(data.get('devices', []))}\n"
+            stats_text += f"🔧 Entités: {sum(len(v) for v in data.get('entities', {}).values())}\n"
+            stats_text += f"🤖 Automatisations: {len(data.get('automations', []))}\n"
+            stats_text += f"📜 Scripts: {len(data.get('scripts', []))}\n"
+            stats_text += f"🎨 Scènes: {len(data.get('scenes', []))}\n"
+            stats_text += f"📝 Inputs: {sum(len(v) for v in data.get('inputs', {}).values())}\n\n"
+            stats_text += "💡 Utilisez les entités boutons et select pour gérer l'intégration."
         else:
-            stats_text += "Aucune donn�e disponible.\n\n"
-            stats_text += "?? Utilisez le bouton 'Actualiser les donn�es' pour collecter les informations."
+            stats_text += "Aucune donnée disponible.\n\n"
+            stats_text += "💡 Utilisez le bouton 'Actualiser les données' pour collecter les informations."
 
         # Just show info, all configuration is done via entities
         return self.async_show_form(

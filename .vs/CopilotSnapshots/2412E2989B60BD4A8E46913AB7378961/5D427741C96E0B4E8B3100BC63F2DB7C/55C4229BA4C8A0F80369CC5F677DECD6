@@ -1,4 +1,4 @@
-{
+﻿{
   "config": {
     "step": {
       "user": {
@@ -14,7 +14,11 @@
     "step": {
       "init": {
         "title": "Listing Home Assistant",
-        "description": "{stats}"
+        "description": "{stats}\n\nActions disponibles :",
+        "data": {
+          "action": "Action",
+          "update_interval": "Intervalle de mise à jour"
+        }
       }
     }
   },

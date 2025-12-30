@@ -1,4 +1,4 @@
-"""The Listing Home Assistant integration."""
+﻿"""The Listing Home Assistant integration."""
 from __future__ import annotations
 
 import logging
@@ -19,7 +19,7 @@ from .download import async_setup_download_handler
 
 _LOGGER = logging.getLogger(__name__)
 
-PLATFORMS: list[Platform] = [Platform.SENSOR, Platform.BUTTON, Platform.SELECT]
+PLATFORMS: list[Platform] = [Platform.SENSOR, Platform.BUTTON]
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
