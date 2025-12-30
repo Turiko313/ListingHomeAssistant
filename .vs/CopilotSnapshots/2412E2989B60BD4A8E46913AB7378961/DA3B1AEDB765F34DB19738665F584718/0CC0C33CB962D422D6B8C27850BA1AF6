@@ -1,4 +1,4 @@
-"""Config flow for Listing Home Assistant integration."""
+﻿"""Config flow for Listing Home Assistant integration."""
 from __future__ import annotations
 
 from typing import Any
