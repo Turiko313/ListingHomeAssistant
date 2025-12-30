@@ -4,6 +4,7 @@ from __future__ import annotations
 import logging
 from datetime import timedelta
 import os
+from dataclasses import dataclass
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
@@ -18,6 +19,14 @@ from .download import async_setup_download_handler
 _LOGGER = logging.getLogger(__name__)
 
 PLATFORMS: list[Platform] = [Platform.SENSOR]
+
+
+@dataclass(slots=True)
+class StaticPathConfig:
+    """Configuration for a static path."""
+    url_path: str
+    path: str
+    cache_headers: bool = True
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -37,14 +46,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         # Register static path - handle both old and new API
         try:
             # Try new API first (Home Assistant 2024.x+)
-            from homeassistant.components.http.static import StaticPathConfig
             config = StaticPathConfig(
                 url_path="/listing_homeassistant",
                 path=card_dir,
                 cache_headers=False
             )
             await hass.http.async_register_static_paths([config])
-        except (ImportError, AttributeError):
+            _LOGGER.info("Static path registered using async_register_static_paths")
+        except AttributeError:
             # Fallback to old API if available
             try:
                 hass.http.register_static_path(
@@ -52,6 +61,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                     card_dir,
                     cache_headers=False
                 )
+                _LOGGER.info("Static path registered using register_static_path")
             except AttributeError:
                 _LOGGER.error("Unable to register static path - unsupported Home Assistant version")
                 return False
