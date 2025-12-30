@@ -34,14 +34,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     _LOGGER.info(f"HACS detected: {is_hacs}")
     
     if os.path.exists(card_dir):
-        # Register static path using correct async method
-        await hass.http.async_register_static_paths([
-            {
-                "url_path": "/listing_homeassistant",
-                "path": card_dir,
-                "cache_headers": False
-            }
-        ])
+        # Register static path using correct method
+        hass.http.register_static_path(
+            "/listing_homeassistant",
+            card_dir,
+            cache_headers=False
+        )
         _LOGGER.info("Static path registered successfully at /listing_homeassistant")
         
         # Register the card as a frontend resource
@@ -141,7 +139,7 @@ class ListingDataUpdateCoordinator(DataUpdateCoordinator):
         for device in devices_registry.devices.values():
             data["devices"].append({
                 "id": device.id,
-                "name": device.name or device.name_by_user,
+                "name": device.name_by_user or device.name,
                 "manufacturer": device.manufacturer,
                 "model": device.model,
                 "sw_version": device.sw_version,
@@ -157,7 +155,7 @@ class ListingDataUpdateCoordinator(DataUpdateCoordinator):
             state = self.hass.states.get(entity.entity_id)
             entity_data = {
                 "entity_id": entity.entity_id,
-                "name": entity.name or entity.original_name,
+                "name": entity.name or entity.original_name or entity.entity_id,
                 "device_id": entity.device_id,
                 "platform": entity.platform,
                 "state": state.state if state else "unavailable",
