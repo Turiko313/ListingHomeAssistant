@@ -26,7 +26,7 @@ PLATFORMS: list[Platform] = [Platform.SENSOR]
 class ListingCardView(HomeAssistantView):
     """View to serve the listing home assistant card JavaScript."""
     
-    url = "/api/listing_homeassistant/card"
+    url = "/api/listing_homeassistant/listing-homeassistant-card.js"
     name = "api:listing_homeassistant:card"
     requires_auth = True
     
@@ -84,7 +84,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         _LOGGER.info("Card API endpoint registered at /api/listing_homeassistant/card")
         
         # Register the card as a frontend resource using the API endpoint
-        card_url = "/api/listing_homeassistant/card"
+        card_url = "/api/listing_homeassistant/listing-homeassistant-card.js"
         _LOGGER.info(f"Adding frontend resource: {card_url}")
         add_extra_js_url(hass, card_url)
         
