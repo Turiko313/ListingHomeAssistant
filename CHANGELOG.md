@@ -5,7 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.4] - 2024-12-30
+## [1.1.6] - 2025-12-30
+
+### Fixed
+
+- Restore full ConfigFlow + OptionsFlow using ConfigFlowResult/OptionsFlow imported from homeassistant.config_entries
+- Matches standard HA sample and MyJDownloader pattern
+- Should resolve "Invalid handler specified"
+
+## [1.1.5] - 2025-12-30
 
 ### Fixed
 
@@ -14,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove type hints from method parameters to match working integrations
 - This should FINALLY fix the "Invalid handler specified" error
 
-## [1.1.3] - 2024-12-30
+## [1.1.4] - 2024-12-30
 
 ### Fixed
 
@@ -22,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Match EXACTLY the working Alarme Personnalisée integration structure
 - Minimal imports only (no logging in ConfigFlow)
 
-## [1.1.2] - 2024-12-30
+## [1.1.3] - 2024-12-30
 
 ### Fixed
 
@@ -110,6 +118,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - HACS compatibility
 - Comprehensive documentation
 
+[1.1.6]: https://github.com/Turiko313/ListingHomeAssistant/releases/tag/v1.1.6
+[1.1.5]: https://github.com/Turiko313/ListingHomeAssistant/releases/tag/v1.1.5
 [1.1.4]: https://github.com/Turiko313/ListingHomeAssistant/releases/tag/v1.1.4
 [1.1.3]: https://github.com/Turiko313/ListingHomeAssistant/releases/tag/v1.1.3
 [1.1.2]: https://github.com/Turiko313/ListingHomeAssistant/releases/tag/v1.1.2
