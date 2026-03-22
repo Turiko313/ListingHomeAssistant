@@ -3,15 +3,11 @@ from __future__ import annotations
 
 import logging
 from datetime import timedelta
-import os
-from dataclasses import dataclass
 
-from aiohttp import web
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
-from homeassistant.components.http import HomeAssistantView
 
 from .const import DOMAIN, CONF_UPDATE_INTERVAL
 from .services import async_setup_services, async_unload_services

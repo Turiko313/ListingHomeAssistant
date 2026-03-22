@@ -5,6 +5,7 @@ import logging
 from datetime import datetime
 
 from homeassistant.components.button import ButtonEntity
+from homeassistant.components.persistent_notification import async_create as pn_create
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -34,24 +35,24 @@ async def async_setup_entry(
 class ListingRefreshButton(CoordinatorEntity, ButtonEntity):
     """Button to manually refresh listing data."""
 
+    _attr_has_entity_name = True
+    _attr_translation_key = "refresh"
+
     def __init__(self, coordinator, entry):
         """Initialize the button."""
         super().__init__(coordinator)
         self._entry = entry
-        self._attr_name = "Actualiser les donnees"
         self._attr_unique_id = f"{entry.entry_id}_refresh"
         self._attr_icon = "mdi:refresh"
-        self._attr_entity_category = None
 
     @property
     def device_info(self):
         """Return device info."""
         return {
-            "identifiers": {(DOMAIN, self._entry.entry_id)},
+            "identifiers": {(DOMAIN, "listing_homeassistant")},
             "name": "Listing Home Assistant",
-            "manufacturer": "Listing Home Assistant",
-            "model": "Data Listing",
-            "sw_version": "1.0.0",
+            "manufacturer": "Turiko313",
+            "model": "Home Assistant Listing",
         }
 
     async def async_press(self) -> None:
@@ -63,41 +64,39 @@ class ListingRefreshButton(CoordinatorEntity, ButtonEntity):
 class ListingExportButton(CoordinatorEntity, ButtonEntity):
     """Button to export data as YAML."""
 
+    _attr_has_entity_name = True
+    _attr_translation_key = "export_yaml"
+
     def __init__(self, coordinator, entry, hass):
         """Initialize the button."""
         super().__init__(coordinator)
         self._entry = entry
         self._hass = hass
-        self._attr_name = "Exporter en YAML"
         self._attr_unique_id = f"{entry.entry_id}_export"
         self._attr_icon = "mdi:download"
-        self._attr_entity_category = None
 
     @property
     def device_info(self):
         """Return device info."""
         return {
-            "identifiers": {(DOMAIN, self._entry.entry_id)},
+            "identifiers": {(DOMAIN, "listing_homeassistant")},
             "name": "Listing Home Assistant",
-            "manufacturer": "Listing Home Assistant",
-            "model": "Data Listing",
-            "sw_version": "1.0.0",
+            "manufacturer": "Turiko313",
+            "model": "Home Assistant Listing",
         }
 
     async def async_press(self) -> None:
         """Handle the button press."""
         _LOGGER.info("Export triggered via button")
-        
-        # Create a persistent notification with download link
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         message = (
-            f"Votre export YAML est pret !\n\n"
-            f"?? [Telecharger le fichier YAML](/api/listing_homeassistant/download)\n\n"
-            f"Le fichier sera nomme: listing_homeassistant_{timestamp}.yaml"
+            "YAML export is ready!\n\n"
+            "[Download YAML file](/api/listing_homeassistant/download)\n\n"
+            f"Filename: listing_homeassistant_{timestamp}.yaml"
         )
-        
-        self._hass.components.persistent_notification.async_create(
+        pn_create(
+            self._hass,
             message,
-            title="?? Export YAML disponible",
-            notification_id=f"listing_homeassistant_export_{timestamp}"
+            title="YAML Export",
+            notification_id=f"listing_homeassistant_export_{timestamp}",
         )

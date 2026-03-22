@@ -3,25 +3,49 @@
     "step": {
       "user": {
         "title": "Listing Home Assistant",
-        "description": "Configurez l'intégration Listing Home Assistant pour lister tous les appareils, entités, automatisations, scripts, scènes, et plus."
+        "description": "Configurez l'int\u00e9gration Listing Home Assistant pour lister tous les appareils, entit\u00e9s, automatisations, scripts, sc\u00e8nes, et plus."
       }
     },
     "abort": {
-      "single_instance_allowed": "Une seule instance est autorisée."
+      "single_instance_allowed": "Une seule instance est autoris\u00e9e."
     }
   },
   "options": {
     "step": {
       "init": {
         "title": "Listing Home Assistant",
-        "description": "Configurez l'intervalle d'actualisation automatique."
+        "description": "Configurez l'intervalle d'actualisation automatique.",
+        "data": {
+          "update_interval": "Intervalle de mise \u00e0 jour"
+        }
+      }
+    }
+  },
+  "entity": {
+    "button": {
+      "refresh": {
+        "name": "Actualiser les donn\u00e9es"
+      },
+      "export_yaml": {
+        "name": "Exporter en YAML"
+      }
+    },
+    "select": {
+      "update_interval": {
+        "name": "Intervalle de mise \u00e0 jour",
+        "state": {
+          "every_hour": "Toutes les heures",
+          "every_6_hours": "Toutes les 6 heures",
+          "every_12_hours": "Toutes les 12 heures",
+          "every_day": "Tous les jours"
+        }
       }
     }
   },
   "services": {
     "refresh": {
       "name": "Actualiser",
-      "description": "Actualiser manuellement les données de listing"
+      "description": "Actualiser manuellement les donn\u00e9es de listing"
     }
   }
 }

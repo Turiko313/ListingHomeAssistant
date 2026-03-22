@@ -35,14 +35,11 @@ class ListingHomeAssistantConfigFlow(ConfigFlow, domain=DOMAIN):
         config_entry: config_entries.ConfigEntry,
     ) -> OptionsFlow:
         """Get the options flow for this handler."""
-        return ListingHomeAssistantOptionsFlow(config_entry)
+        return ListingHomeAssistantOptionsFlow()
 
 
 class ListingHomeAssistantOptionsFlow(OptionsFlow):
     """Handle options flow for Listing Home Assistant."""
-
-    def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
-        self._config_entry = config_entry
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
@@ -57,15 +54,15 @@ class ListingHomeAssistantOptionsFlow(OptionsFlow):
                 {
                     vol.Required(
                         CONF_UPDATE_INTERVAL,
-                        default=self._config_entry.options.get(
+                        default=self.config_entry.options.get(
                             CONF_UPDATE_INTERVAL, UPDATE_INTERVALS["1_hour"]
                         ),
                     ): vol.In(
                         {
-                            UPDATE_INTERVALS["1_hour"]: "Toutes les heures",
-                            UPDATE_INTERVALS["6_hours"]: "Toutes les 6 heures",
-                            UPDATE_INTERVALS["12_hours"]: "Toutes les 12 heures",
-                            UPDATE_INTERVALS["1_day"]: "Tous les jours",
+                            UPDATE_INTERVALS["1_hour"]: "Every hour",
+                            UPDATE_INTERVALS["6_hours"]: "Every 6 hours",
+                            UPDATE_INTERVALS["12_hours"]: "Every 12 hours",
+                            UPDATE_INTERVALS["1_day"]: "Every day",
                         }
                     )
                 }

@@ -14,7 +14,31 @@
     "step": {
       "init": {
         "title": "Listing Home Assistant",
-        "description": "Configure the automatic update interval."
+        "description": "Configure the automatic update interval.",
+        "data": {
+          "update_interval": "Update Interval"
+        }
+      }
+    }
+  },
+  "entity": {
+    "button": {
+      "refresh": {
+        "name": "Refresh Data"
+      },
+      "export_yaml": {
+        "name": "Export YAML"
+      }
+    },
+    "select": {
+      "update_interval": {
+        "name": "Update Interval",
+        "state": {
+          "every_hour": "Every hour",
+          "every_6_hours": "Every 6 hours",
+          "every_12_hours": "Every 12 hours",
+          "every_day": "Every day"
+        }
       }
     }
   }
