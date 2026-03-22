@@ -2,10 +2,10 @@
 from __future__ import annotations
 
 import logging
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from homeassistant.components.button import ButtonEntity
-from homeassistant.components.http import async_sign_path
+from homeassistant.components.http.auth import async_sign_path
 from homeassistant.components.persistent_notification import async_create as pn_create
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
