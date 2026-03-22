@@ -1,3 +1,6 @@
+# Visual Studio
+.vs/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -107,3 +110,4 @@ dmypy.json
 # OS
 .DS_Store
 Thumbs.db
+cdn_icon_listing.png
