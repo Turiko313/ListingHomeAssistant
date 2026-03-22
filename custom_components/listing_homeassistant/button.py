@@ -12,7 +12,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DOMAIN
+from .const import DOMAIN, CONF_EXPORT_SECTION
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -91,11 +91,15 @@ class ListingExportButton(CoordinatorEntity, ButtonEntity):
         _LOGGER.info("Export triggered via button")
 
         try:
+            # Get the selected export section
+            section = self._entry.options.get(CONF_EXPORT_SECTION, "all")
+            download_path = f"/api/listing_homeassistant/download?section={section}"
+
             # Create a signed URL for the download endpoint (valid 30 min)
             # use_content_user=True avoids context issues (no ws/request in button press)
             signed_path = async_sign_path(
                 self._hass,
-                "/api/listing_homeassistant/download",
+                download_path,
                 timedelta(minutes=30),
                 use_content_user=True,
             )

@@ -14,3 +14,16 @@ UPDATE_INTERVALS = {
 
 # Special key for YAML export data storage
 YAML_EXPORT_KEY = "yaml_export"
+
+# Export section options
+CONF_EXPORT_SECTION = "export_section"
+EXPORT_SECTIONS = [
+    "all",
+    "devices",
+    "entities",
+    "automations",
+    "scripts",
+    "scenes",
+    "inputs",
+    "blueprints",
+]

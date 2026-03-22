@@ -39,6 +39,19 @@
           "every_12_hours": "Every 12 hours",
           "every_day": "Every day"
         }
+      },
+      "export_section": {
+        "name": "Export Section",
+        "state": {
+          "all": "All (complete)",
+          "devices": "Devices",
+          "entities": "Entities",
+          "automations": "Automations",
+          "scripts": "Scripts",
+          "scenes": "Scenes",
+          "inputs": "Inputs",
+          "blueprints": "Blueprints"
+        }
       }
     }
   },

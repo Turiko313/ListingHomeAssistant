@@ -9,7 +9,13 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DOMAIN, CONF_UPDATE_INTERVAL, UPDATE_INTERVALS
+from .const import (
+    DOMAIN,
+    CONF_UPDATE_INTERVAL,
+    UPDATE_INTERVALS,
+    CONF_EXPORT_SECTION,
+    EXPORT_SECTIONS,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -31,7 +37,10 @@ async def async_setup_entry(
 ) -> None:
     """Set up Listing Home Assistant select entities."""
     coordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_entities([ListingUpdateIntervalSelect(coordinator, entry, hass)])
+    async_add_entities([
+        ListingUpdateIntervalSelect(coordinator, entry, hass),
+        ListingExportSectionSelect(coordinator, entry, hass),
+    ])
 
 
 class ListingUpdateIntervalSelect(CoordinatorEntity, SelectEntity):
@@ -78,3 +87,43 @@ class ListingUpdateIntervalSelect(CoordinatorEntity, SelectEntity):
             _LOGGER.info(
                 "Update interval changed to %s (%s seconds)", option, new_value
             )
+
+
+class ListingExportSectionSelect(CoordinatorEntity, SelectEntity):
+    """Select entity to choose which section to export."""
+
+    _attr_has_entity_name = True
+    _attr_translation_key = "export_section"
+
+    def __init__(self, coordinator, entry, hass):
+        """Initialize the select."""
+        super().__init__(coordinator)
+        self._entry = entry
+        self._hass = hass
+        self._attr_unique_id = f"{entry.entry_id}_export_section"
+        self._attr_icon = "mdi:filter-variant"
+        self._attr_options = EXPORT_SECTIONS
+
+    @property
+    def device_info(self):
+        """Return device info."""
+        return {
+            "identifiers": {(DOMAIN, "listing_homeassistant")},
+            "name": "Listing Home Assistant",
+            "manufacturer": "Turiko313",
+            "model": "Home Assistant Listing",
+        }
+
+    @property
+    def current_option(self) -> str:
+        """Return the current selected option."""
+        return self._entry.options.get(CONF_EXPORT_SECTION, "all")
+
+    async def async_select_option(self, option: str) -> None:
+        """Change the selected option."""
+        if option in EXPORT_SECTIONS:
+            new_options = {**self._entry.options, CONF_EXPORT_SECTION: option}
+            self._hass.config_entries.async_update_entry(
+                self._entry, options=new_options
+            )
+            _LOGGER.info("Export section changed to %s", option)
