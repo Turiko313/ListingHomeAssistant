@@ -1,7 +1,45 @@
 {
-  "component": {
-    "listing_homeassistant": {
-      "default": "mdi:file-document"
+  "entity": {
+    "sensor": {
+      "devices": {
+        "default": "mdi:devices"
+      },
+      "entities": {
+        "default": "mdi:format-list-bulleted"
+      },
+      "automations": {
+        "default": "mdi:robot"
+      },
+      "scripts": {
+        "default": "mdi:script-text"
+      },
+      "scenes": {
+        "default": "mdi:palette"
+      },
+      "inputs": {
+        "default": "mdi:form-textbox"
+      },
+      "summary": {
+        "default": "mdi:file-document"
+      }
+    },
+    "button": {
+      "refresh": {
+        "default": "mdi:refresh"
+      },
+      "export_yaml": {
+        "default": "mdi:download"
+      }
+    },
+    "select": {
+      "update_interval": {
+        "default": "mdi:timer-cog"
+      }
+    }
+  },
+  "services": {
+    "refresh": {
+      "service": "mdi:refresh"
     }
   }
 }
