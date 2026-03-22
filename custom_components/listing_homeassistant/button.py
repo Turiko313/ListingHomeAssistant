@@ -90,18 +90,34 @@ class ListingExportButton(CoordinatorEntity, ButtonEntity):
         """Handle the button press."""
         _LOGGER.info("Export triggered via button")
 
-        # Create a signed URL for the download endpoint (valid 30 min)
-        signed_path = async_sign_path(
-            self._hass,
-            "/api/listing_homeassistant/download",
-            timedelta(minutes=30),
-        )
+        try:
+            # Create a signed URL for the download endpoint (valid 30 min)
+            # use_content_user=True avoids context issues (no ws/request in button press)
+            signed_path = async_sign_path(
+                self._hass,
+                "/api/listing_homeassistant/download",
+                timedelta(minutes=30),
+                use_content_user=True,
+            )
 
-        pn_create(
-            self._hass,
-            "YAML export is ready!\n\n"
-            f"[Download YAML file]({signed_path})\n\n"
-            "Link valid for 30 minutes.",
-            title="YAML Export",
-            notification_id="listing_homeassistant_export",
-        )
+            # Build full absolute URL so the browser navigates outside the HA SPA
+            from homeassistant.helpers.network import get_url
+            base_url = get_url(self._hass, allow_external=False)
+            download_url = f"{base_url}{signed_path}"
+
+            pn_create(
+                self._hass,
+                "YAML export is ready!\n\n"
+                f"[Download YAML file]({download_url})\n\n"
+                "Link valid for 30 minutes.",
+                title="YAML Export",
+                notification_id="listing_homeassistant_export",
+            )
+        except Exception:
+            _LOGGER.exception("Failed to create YAML export link")
+            pn_create(
+                self._hass,
+                "Failed to create YAML export link. Check logs for details.",
+                title="YAML Export Error",
+                notification_id="listing_homeassistant_export",
+            )
