@@ -55,12 +55,25 @@ class ListingDownloadView(HomeAssistantView):
             export_data = self._build_section_export(data, section)
             filename = f"listing_{section}_{timestamp}.yaml"
 
-        yaml_content = yaml.dump(
-            export_data,
-            allow_unicode=True,
-            default_flow_style=False,
-            sort_keys=False,
-        )
+        def _dump_yaml():
+            import json
+            # Sanitize data first: converts complex HA objects (datetimes, enums,
+            # frozendicts, tuples) to strings/lists safely via JSON
+            json_str = json.dumps(export_data, default=str)
+            clean_data = json.loads(json_str)
+
+            return yaml.dump(
+                clean_data,
+                allow_unicode=True,
+                default_flow_style=False,
+                sort_keys=False,
+            )
+
+        try:
+            yaml_content = await self.hass.async_add_executor_job(_dump_yaml)
+        except Exception as err:
+            _LOGGER.error("Failed to generate YAML: %s", err)
+            return web.Response(text=f"Export failed: {err}", status=500)
 
         return web.Response(
             body=yaml_content.encode('utf-8'),

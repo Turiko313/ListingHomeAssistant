@@ -94,13 +94,12 @@ class ListingDevicesSensor(ListingBaseSensor):
 
     @property
     def extra_state_attributes(self):
-        """Return the state attributes."""
+        """Return the state attributes safely without bloating the database."""
         if not self.coordinator.data:
             return {}
         
         devices = self.coordinator.data.get("devices", [])
         return {
-            "devices": devices,
             "count": len(devices),
             "last_update": self._get_last_update(),
         }
@@ -124,7 +123,7 @@ class ListingEntitiesSensor(ListingBaseSensor):
 
     @property
     def extra_state_attributes(self):
-        """Return the state attributes."""
+        """Return the state attributes safely without bloating the database."""
         if not self.coordinator.data:
             return {}
         
@@ -132,7 +131,6 @@ class ListingEntitiesSensor(ListingBaseSensor):
         counts = {domain: len(ents) for domain, ents in entities.items()}
         
         return {
-            "entities_by_domain": entities,
             "domain_counts": counts,
             "total_count": sum(counts.values()),
             "last_update": self._get_last_update(),
@@ -156,13 +154,12 @@ class ListingAutomationsSensor(ListingBaseSensor):
 
     @property
     def extra_state_attributes(self):
-        """Return the state attributes."""
+        """Return the state attributes safely without bloating the database."""
         if not self.coordinator.data:
             return {}
         
         automations = self.coordinator.data.get("automations", [])
         return {
-            "automations": automations,
             "count": len(automations),
             "last_update": self._get_last_update(),
         }
@@ -185,13 +182,12 @@ class ListingScriptsSensor(ListingBaseSensor):
 
     @property
     def extra_state_attributes(self):
-        """Return the state attributes."""
+        """Return the state attributes safely without bloating the database."""
         if not self.coordinator.data:
             return {}
         
         scripts = self.coordinator.data.get("scripts", [])
         return {
-            "scripts": scripts,
             "count": len(scripts),
             "last_update": self._get_last_update(),
         }
@@ -214,13 +210,12 @@ class ListingScenesSensor(ListingBaseSensor):
 
     @property
     def extra_state_attributes(self):
-        """Return the state attributes."""
+        """Return the state attributes safely without bloating the database."""
         if not self.coordinator.data:
             return {}
         
         scenes = self.coordinator.data.get("scenes", [])
         return {
-            "scenes": scenes,
             "count": len(scenes),
             "last_update": self._get_last_update(),
         }
@@ -244,7 +239,7 @@ class ListingInputsSensor(ListingBaseSensor):
 
     @property
     def extra_state_attributes(self):
-        """Return the state attributes."""
+        """Return the state attributes safely without bloating the database."""
         if not self.coordinator.data:
             return {}
         
@@ -252,7 +247,6 @@ class ListingInputsSensor(ListingBaseSensor):
         counts = {input_type: len(items) for input_type, items in inputs.items()}
         
         return {
-            "inputs_by_type": inputs,
             "type_counts": counts,
             "total_count": sum(counts.values()),
             "last_update": self._get_last_update(),
@@ -274,7 +268,7 @@ class ListingSummarySensor(ListingBaseSensor):
 
     @property
     def extra_state_attributes(self):
-        """Return the state attributes."""
+        """Return the state attributes safely without bloating the database."""
         if not self.coordinator.data:
             return {}
         

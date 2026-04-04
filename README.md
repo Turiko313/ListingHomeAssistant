@@ -7,11 +7,12 @@ Une intégration HACS pour Home Assistant qui liste tous les appareils, entités
 ## Fonctionnalités
 
 - 📋 **Liste complète** de tous vos appareils et entités
-- 🤖 **Automatisations, scripts et scènes** facilement accessibles
+- 🤖 **Automatisations, scripts et scènes** avec détails (déclencheurs, conditions, actions, séquences)
 - 🔘 **Boutons intégrés** pour actualiser et exporter
 - ⏰ **Actualisation automatique** configurable via entité Select
-- 📤 **Export YAML** avec structure arborescente triée
-- 📊 **10 entités créées** (7 sensors + 2 boutons + 1 select)
+- 📥 **Export YAML ciblé** : choisissez la section à exporter (Tout, Appareils, Automatisations, etc.) via entité Select
+- 📤 **Export YAML optimisé** avec structure arborescente triée
+- 📊 **11 entités créées** (7 sensors + 2 boutons + 2 selects)
 - 🎨 **Interface complète** directement dans Home Assistant
 
 ## Installation

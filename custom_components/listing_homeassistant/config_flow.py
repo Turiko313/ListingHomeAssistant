@@ -46,7 +46,9 @@ class ListingHomeAssistantOptionsFlow(OptionsFlow):
     ) -> ConfigFlowResult:
         """Manage the options."""
         if user_input is not None:
-            return self.async_create_entry(title="", data=user_input)
+            # Merge with existing options to avoid overriding values set by other entities (e.g. Select export section)
+            new_options = {**self.config_entry.options, **user_input}
+            return self.async_create_entry(title="", data=new_options)
 
         return self.async_show_form(
             step_id="init",
