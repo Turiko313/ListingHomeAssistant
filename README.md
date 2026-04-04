@@ -45,20 +45,25 @@ Une intégration HACS pour Home Assistant qui liste tous les appareils, entités
 
 ## Entités créées
 
-### Contrôles (3 entités)
+### Contrôles (4 entités)
 
 #### `button.actualiser_les_donnees`
 - 🔄 Actualise manuellement toutes les données
 - Icône : `mdi:refresh`
 
 #### `button.exporter_en_yaml`
-- 📥 Crée une notification avec le lien de téléchargement YAML
+- 📥 Crée une notification avec le lien de téléchargement YAML selon la section sélectionnée
 - Icône : `mdi:download`
 
 #### `select.intervalle_de_mise_a_jour`
 - ⏱️ Configure l'intervalle d'actualisation automatique
 - Options : Toutes les heures / 6h / 12h / 24h
 - Icône : `mdi:timer-cog`
+
+#### `select.section_a_exporter`
+- 🎯 Définit la section des données à exporter via le bouton YAML
+- Options : Tout (complet), Appareils, Entités, Automatisations, Scripts, Scènes, Entrées, Blueprints
+- Icône : `mdi:filter-variant`
 
 ### Statistiques (7 sensors)
 
@@ -115,12 +120,16 @@ Actualise manuellement les données (équivalent au bouton).
 service: listing_homeassistant.refresh
 ```
 
-### Export YAML
+### Export YAML par Section
 
-Deux méthodes pour exporter :
+Deux méthodes pour exporter vos données ou une section spécifique :
 
-1. **Via le bouton** : Cliquez sur `button.exporter_en_yaml`, une notification apparaît avec le lien
-2. **Via URL directe** : `http://your-home-assistant:8123/api/listing_homeassistant/download`
+1. **Via l'interface (UI)** :
+   - Choisissez un filtre via l'entité `select.section_a_exporter` (ex: "Automatisations").
+   - Cliquez sur `button.exporter_en_yaml`, une notification apparaît.
+   - Cliquez sur le lien pour télécharger un YAML trié contenant toutes les étapes détaillées (Triggers, Conditions, Actions, etc.).
+2. **Via URL directe (API)** :
+   - Vous pouvez interroger l'URL avec un paramètre section : `/api/listing_homeassistant/download?section=automations` (Nécessite authentification classique Home Assistant).
 
 ### Exemple d'automatisation
 
