@@ -182,10 +182,26 @@ listing_home_assistant:
   automations:
     - entity_id: "automation.morning_routine"
       name: "Morning Routine"
+      state: "on"
+      mode: "single"
       last_triggered: "2024-12-30T06:00:00"
+      triggers:
+        - platform: time
+          at: "06:00:00"
+      conditions: []
+      actions:
+        - service: light.turn_on
+          target:
+            entity_id: "light.bedroom"
   scripts:
     - entity_id: "script.bedtime"
       name: "Bedtime"
+      state: "off"
+      mode: "single"
+      sequence:
+        - service: light.turn_off
+          target:
+            entity_id: "all"
   scenes:
     - entity_id: "scene.movie"
       name: "Movie"

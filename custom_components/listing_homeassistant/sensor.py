@@ -69,7 +69,7 @@ class ListingBaseSensor(CoordinatorEntity, SensorEntity):
             "name": "Listing Home Assistant",
             "manufacturer": "Turiko313",
             "model": "Home Assistant Listing",
-            "sw_version": "1.0.0",
+            "sw_version": "1.3.0",
         }
     
     def _get_last_update(self) -> str:
