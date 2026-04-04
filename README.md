@@ -4,8 +4,16 @@
 
 Une intégration HACS pour Home Assistant qui liste tous les appareils, entités, automatisations, scènes, scripts, et plus de votre instance Home Assistant.
 
+## Nouveautés majeures de la v1.3.1 (Sécurité & Optimisation)
+
+- **CRITICAL FIX**: `sensor.py` n'intègre plus les très longues listes dans ses attributs, ce qui évite l'explosion de la base de données HA et l'erreur d'attributs dépassant les 16 Ko.
+- **PERFORMANCE**: La génération YAML (`download.py`) s'effectue dans un thread en arrière-plan (`async_add_executor_job`), garantissant 0 freeze sur l'interface Home Assistant, même sur les gros systèmes !
+- **ROBUSTE**: Auto-nettoyage des dictionnaires complexes Home Assistant (datetimes, Enums, `ReadOnlyDicts`, etc) par une sérialisation JSON transitoire. Finis les tags `!!python/object/...` illisibles dans le YAML exporté.
+- **AMÉLIORATION Options UI**: Les sélections UI persistantes (Intervalle, Section_à_exporter) ne s'écrasent plus mutuellement.
+
 ## Fonctionnalités
 
+- **PERFORMANCE ASSURÉE** : Rendu des exports YAML asynchrones et sécurisés, plus aucune base de données lente à cause d'attributs gigantesques stockés (Optimisation majeure).
 - 📋 **Liste complète** de tous vos appareils et entités
 - 🤖 **Automatisations, scripts et scènes** avec détails (déclencheurs, conditions, actions, séquences)
 - 🔘 **Boutons intégrés** pour actualiser et exporter
